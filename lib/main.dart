@@ -28,12 +28,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _currentStep;
 
-  void _step(int stepIndex) {
-    setState(() {
-      _counter = stepIndex;
-    });
+  @override
+  void initState() {
+    _currentStep = 0;
+    super.initState();
   }
 
   @override
@@ -47,22 +47,28 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Stepper(
-              currentStep: _counter,
-              onStepContinue: () {
-                _step(_counter + 1);
-              },
               onStepCancel: () {
-                _step(_counter - 1);
+                setState(() {
+                  _currentStep--;
+                });
               },
-              onStepTapped: (value) {
-                _step(value);
+              onStepContinue: () {
+                setState(() {
+                  _currentStep++;
+                });
               },
+              onStepTapped: (index) {
+                setState(() {
+                  _currentStep = index;
+                });
+              },
+              currentStep: _currentStep,
               steps: [
                 Step(
                   content: Text('complete'),
                   title: Text('Title'),
                   subtitle: Text('Subtitle'),
-                  isActive: false,
+                  isActive: true,
                   state: StepState.complete,
                 ),
                 Step(
@@ -95,18 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _step(_counter + 1),
+        onPressed: () {},
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
